@@ -373,7 +373,7 @@ h1,h2,h3,h4{font-family:'Noto Serif SC',serif;font-weight:700;}
   <h2 class="section-title">行程总览</h2>
   <p class="section-sub">七段旅程，点击展开查看每日详情</p>
 
-  <button class="expand-all" onclick="toggleAll()">展开全部行程</button>
+  <button class="expand-all" onclick="toggleAll()">收起全部行程</button>
 
   <div class="timeline">
 
@@ -446,13 +446,13 @@ h1,h2,h3,h4{font-family:'Noto Serif SC',serif;font-weight:700;}
         <div class="tl-extra">
           <div class="tl-extra-inner">
             <table class="day-table">
-              <colgroup><col style="width:28%"><col style="width:72%"></colgroup>
-              <tr><th>日期</th><th>行程</th></tr>
-              <tr><td>2.6-2.8（除夕-初二）</td><td>福州过年，陪家人，三坊七巷、鱼丸肉燕佛跳墙</td></tr>
-              <tr><td>2.9（初三）</td><td>福州高铁→潮州（2h）→ 广济桥 → 牌坊街 → 开元寺 → 潮州夜景</td></tr>
-              <tr><td>2.10（初四）</td><td>潮州→汕头（1h）→ 小公园骑楼 → 南澳岛（可选）→ 汕头夜市</td></tr>
-              <tr><td>2.11（初五）</td><td>汕头美食（牛肉火锅→肠粉→蚝烙→甘草水果）→ 高铁回福州</td></tr>
-              <tr><td>2.12-2.14（初六-初八）</td><td>福州休整，周边走走，准备返程</td></tr>
+              <colgroup><col style="width:22%"><col style="width:58%"><col style="width:20%"></colgroup>
+              <tr><th>日期</th><th>行程</th><th>住宿</th></tr>
+              <tr><td>2.6-2.8（除夕-初二）</td><td>福州过年，陪家人，三坊七巷、鱼丸肉燕佛跳墙</td><td>福州</td></tr>
+              <tr><td>2.9（初三）</td><td>福州高铁→潮州（2h）→ 广济桥 → 牌坊街 → 开元寺 → 潮州夜景</td><td>潮州</td></tr>
+              <tr><td>2.10（初四）</td><td>潮州→汕头（1h）→ 小公园骑楼 → 南澳岛（可选）→ 汕头夜市</td><td>汕头</td></tr>
+              <tr><td>2.11（初五）</td><td>汕头美食（牛肉火锅→肠粉→蚝烙→甘草水果）→ 高铁回福州</td><td>福州</td></tr>
+              <tr><td>2.12-2.14（初六-初八）</td><td>福州休整，周边走走，准备返程</td><td>福州</td></tr>
             </table>
             <div class="highlight-box">
               <div class="label">亮点</div>
@@ -811,17 +811,16 @@ function toggleItem(header){
   const item = header.closest('.tl-item');
   item.classList.toggle('open');
 }
-let allOpen = false;
+let allOpen = true;
 function toggleAll(){
   const items = document.querySelectorAll('.tl-item');
   allOpen = !allOpen;
   items.forEach(it => it.classList.toggle('open', allOpen));
   document.querySelector('.expand-all').textContent = allOpen ? '收起全部行程' : '展开全部行程';
 }
-// 默认展开第一个
-document.querySelector('.tl-item').classList.add('open');
+// 默认全部展开
+document.querySelectorAll('.tl-item').forEach(it => it.classList.add('open'));
 </script>
 
 </body>
 </html>
-<!-- （注：内容由AI生成） -->
