@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>2027 旅行年鉴 · 七省大环线</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23B85C38'/%3E%3Ctext x='32' y='45' font-size='32' text-anchor='middle' fill='white' font-family='serif' font-weight='bold'%3E旅%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+<style>
+:root{
+  --bg:#F5F1E8;
+  --bg-card:#FFFCF5;
+  --ink:#3D3229;
+  --ink-soft:#6B5D52;
+  --ink-faint:#9C8E82;
+  --accent:#B85C38;
+  --accent-soft:#D4845E;
+  --gold:#C9A961;
+  --line:#E5DDD0;
+  --tag-bg:#EDE5D6;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Noto Sans SC',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.7;
+  font-size:15px;
+}
+h1,h2,h3,h4{font-family:'Noto Serif SC',serif;font-weight:700;}
+
+/* ===== 导航 ===== */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(245,241,232,.92);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:56px;
+}
+.nav-brand{font-family:'Noto Serif SC',serif;font-weight:700;font-size:16px;color:var(--accent);letter-spacing:1px;}
+.nav-links{display:flex;gap:28px;}
+.nav-links a{
+  text-decoration:none;color:var(--ink-soft);font-size:13px;
+  transition:color .2s;letter-spacing:.5px;
+}
+.nav-links a:hover{color:var(--accent);}
+@media(max-width:640px){
+  .nav{padding:0 16px;}
+  .nav-links{gap:14px;}
+  .nav-links a{font-size:11px;}
+}
+
+/* ===== Hero ===== */
+.hero{
+  position:relative;min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:120px 24px 80px;
+  background:
+    radial-gradient(ellipse at 20% 30%,rgba(184,92,56,.08) 0%,transparent 50%),
+    radial-gradient(ellipse at 80% 70%,rgba(201,169,97,.1) 0%,transparent 50%),
+    linear-gradient(180deg,#F5F1E8 0%,#EDE5D6 100%);
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(61,50,41,.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(61,50,41,.03) 1px,transparent 1px);
+  background-size:48px 48px;
+  pointer-events:none;
+}
+.hero-eyebrow{
+  font-size:12px;letter-spacing:6px;color:var(--accent);
+  text-transform:uppercase;margin-bottom:24px;font-weight:500;
+}
+.hero-title{
+  font-size:clamp(36px,7vw,72px);font-weight:900;
+  line-height:1.15;color:var(--ink);margin-bottom:8px;
+  letter-spacing:2px;
+}
+.hero-subtitle{
+  font-size:clamp(16px,2.5vw,22px);color:var(--ink-soft);
+  font-weight:400;margin-bottom:32px;letter-spacing:4px;
+}
+.hero-desc{
+  max-width:560px;font-size:14px;color:var(--ink-soft);
+  line-height:1.9;margin-bottom:56px;
+}
+.hero-stats{
+  display:flex;gap:16px;flex-wrap:wrap;justify-content:center;
+}
+.stat-card{
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:12px;padding:20px 28px;min-width:120px;
+  box-shadow:0 2px 12px rgba(61,50,41,.06);
+}
+.stat-num{
+  font-family:'Noto Serif SC',serif;font-size:32px;font-weight:900;
+  color:var(--accent);line-height:1;
+}
+.stat-label{font-size:11px;color:var(--ink-faint);margin-top:6px;letter-spacing:1px;}
+
+/* ===== 通用 section ===== */
+.section{padding:80px 24px;max-width:960px;margin:0 auto;}
+.section-eyebrow{
+  text-align:center;font-size:11px;letter-spacing:5px;
+  color:var(--accent);text-transform:uppercase;margin-bottom:12px;
+}
+.section-title{
+  text-align:center;font-size:clamp(24px,4vw,36px);
+  font-weight:700;color:var(--ink);margin-bottom:12px;
+}
+.section-sub{
+  text-align:center;font-size:13px;color:var(--ink-faint);
+  margin-bottom:48px;letter-spacing:1px;
+}
+
+/* ===== 省份标签 ===== */
+.province-bar{
+  display:flex;gap:8px;flex-wrap:wrap;justify-content:center;
+  margin-bottom:56px;
+}
+.province-tag{
+  padding:6px 16px;border-radius:20px;font-size:12px;
+  background:var(--tag-bg);color:var(--ink-soft);
+  border:1px solid var(--line);
+}
+.province-tag.hl{background:var(--accent);color:#fff;border-color:var(--accent);}
+
+/* ===== 时间线 ===== */
+.timeline{position:relative;}
+.tl-item{
+  display:grid;grid-template-columns:40px 1fr;
+  gap:0;margin-bottom:32px;position:relative;
+}
+.tl-axis-seg{
+  grid-column:1;grid-row:1;
+  width:2px;background:var(--line);
+  justify-self:center;height:calc(100% + 32px);
+  margin-top:-16px;
+}
+.tl-item:last-child .tl-axis-seg{height:calc(100% - 16px);}
+.tl-marker{
+  grid-column:1;grid-row:1;
+  justify-self:center;align-self:start;
+  margin-top:20px;width:24px;height:24px;border-radius:50%;
+  background:var(--bg);border:3px solid var(--accent);
+  z-index:1;position:relative;
+}
+.tl-card{
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;
+  box-shadow:0 2px 16px rgba(61,50,41,.05);
+  transition:box-shadow .25s,transform .25s;
+}
+.tl-card:hover{box-shadow:0 6px 24px rgba(61,50,41,.1);transform:translateY(-2px);}
+.tl-header{
+  padding:20px 24px;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+}
+.tl-header-left{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.tl-day{
+  font-family:'Noto Serif SC',serif;font-size:20px;font-weight:900;
+  color:var(--accent);min-width:36px;
+}
+.tl-meta{display:flex;flex-direction:column;gap:2px;}
+.tl-date{font-size:12px;color:var(--ink-faint);}
+.tl-title{font-size:16px;font-weight:700;color:var(--ink);}
+.tl-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.tl-tag{
+  font-size:10px;padding:3px 10px;border-radius:10px;
+  background:var(--tag-bg);color:var(--ink-soft);letter-spacing:.5px;
+}
+.tl-tag.accent{background:var(--accent);color:#fff;}
+.tl-header-right{display:flex;align-items:center;gap:16px;}
+.tl-budget{font-size:13px;color:var(--accent);font-weight:600;white-space:nowrap;}
+.tl-toggle{
+  width:28px;height:28px;border-radius:50%;border:1px solid var(--line);
+  background:var(--bg);display:flex;align-items:center;justify-content:center;
+  font-size:14px;color:var(--ink-soft);transition:transform .3s;
+  flex-shrink:0;
+}
+.tl-item.open .tl-toggle{transform:rotate(180deg);}
+.tl-extra{
+  display:none;
+  border-top:1px solid var(--line);
+}
+.tl-item.open .tl-extra{display:block;}
+.tl-extra-inner{padding:20px 24px;}
+.day-table{width:100%;border-collapse:collapse;margin-bottom:16px;table-layout:fixed;}
+.day-table th{
+  text-align:left;font-size:11px;color:var(--ink-faint);
+  padding:8px 10px;border-bottom:1px solid var(--line);
+  font-weight:500;letter-spacing:.5px;
+}
+.day-table td{
+  padding:10px;font-size:13px;border-bottom:1px solid var(--line);
+  color:var(--ink-soft);vertical-align:top;
+}
+.day-table tr:last-child td{border-bottom:none;}
+.day-table td:first-child{color:var(--accent);font-weight:600;white-space:nowrap;}
+.highlight-box{
+  background:linear-gradient(135deg,rgba(184,92,56,.06),rgba(201,169,97,.06));
+  border-left:3px solid var(--accent);border-radius:0 8px 8px 0;
+  padding:12px 16px;margin-bottom:10px;
+}
+.highlight-box .label{font-size:11px;color:var(--accent);font-weight:600;margin-bottom:4px;letter-spacing:1px;}
+.highlight-box p{font-size:13px;color:var(--ink-soft);line-height:1.8;}
+.tip-box{
+  background:rgba(201,169,97,.08);border-left:3px solid var(--gold);
+  border-radius:0 8px 8px 0;padding:12px 16px;
+}
+.tip-box .label{font-size:11px;color:var(--gold);font-weight:600;margin-bottom:4px;letter-spacing:1px;}
+.tip-box p{font-size:13px;color:var(--ink-soft);line-height:1.8;}
+
+/* ===== 年假 ===== */
+.annual-leave{
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:14px;padding:32px;margin-bottom:32px;
+}
+.al-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;}
+.al-card{
+  border:1px solid var(--line);border-radius:10px;padding:20px;
+  background:var(--bg);
+}
+.al-card h4{font-size:14px;color:var(--accent);margin-bottom:8px;}
+.al-card p{font-size:13px;color:var(--ink-soft);}
+.al-total{
+  text-align:center;margin-top:24px;padding-top:20px;
+  border-top:1px dashed var(--line);
+}
+.al-total .num{font-family:'Noto Serif SC',serif;font-size:36px;font-weight:900;color:var(--accent);}
+.al-total .lbl{font-size:12px;color:var(--ink-faint);letter-spacing:1px;}
+
+/* ===== 预算表 ===== */
+.budget-wrap{
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:14px;overflow:hidden;
+}
+.budget-table{width:100%;border-collapse:collapse;}
+.budget-table th{
+  background:var(--ink);color:var(--bg);padding:14px 16px;
+  font-size:12px;font-weight:500;text-align:left;letter-spacing:1px;
+}
+.budget-table td{
+  padding:14px 16px;font-size:13px;border-bottom:1px solid var(--line);
+  color:var(--ink-soft);
+}
+.budget-table tr:last-child td{border-bottom:none;}
+.budget-table tr.total td{
+  background:var(--tag-bg);font-weight:700;color:var(--ink);
+  font-family:'Noto Serif SC',serif;
+}
+.budget-table .num{text-align:right;font-variant-numeric:tabular-nums;}
+
+/* ===== 贴士 ===== */
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;}
+.tip-card{
+  background:var(--bg-card);border:1px solid var(--line);
+  border-radius:12px;padding:24px;
+}
+.tip-card h4{
+  font-size:15px;color:var(--accent);margin-bottom:12px;
+  display:flex;align-items:center;gap:8px;
+}
+.tip-card h4::before{
+  content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);
+}
+.tip-card ul{list-style:none;}
+.tip-card li{
+  font-size:13px;color:var(--ink-soft);padding:6px 0;
+  padding-left:16px;position:relative;line-height:1.7;
+}
+.tip-card li::before{
+  content:'·';position:absolute;left:4px;color:var(--gold);font-weight:700;
+}
+
+/* ===== 订票时间线 ===== */
+.booking-timeline{position:relative;padding-left:28px;}
+.booking-timeline::before{
+  content:'';position:absolute;left:9px;top:6px;bottom:6px;
+  width:2px;background:var(--line);
+}
+.bt-item{position:relative;margin-bottom:20px;}
+.bt-dot{
+  position:absolute;left:-28px;top:6px;width:20px;height:20px;
+  border-radius:50%;background:var(--gold);border:3px solid var(--bg);
+}
+.bt-item.priority .bt-dot{background:var(--accent);}
+.bt-time{font-size:12px;color:var(--accent);font-weight:600;}
+.bt-text{font-size:13px;color:var(--ink-soft);margin-top:2px;}
+
+/* ===== 页脚 ===== */
+.footer{
+  text-align:center;padding:48px 24px;
+  border-top:1px solid var(--line);color:var(--ink-faint);
+  font-size:12px;letter-spacing:1px;
+}
+.footer .quote{
+  font-family:'Noto Serif SC',serif;font-size:16px;
+  color:var(--ink-soft);margin-bottom:12px;font-style:italic;
+}
+
+/* ===== 展开全部按钮 ===== */
+.expand-all{
+  display:block;margin:0 auto 32px;padding:10px 28px;
+  background:var(--bg-card);border:1px solid var(--accent);
+  color:var(--accent);border-radius:24px;font-size:13px;
+  cursor:pointer;transition:all .2s;font-family:inherit;
+}
+.expand-all:hover{background:var(--accent);color:#fff;}
+</style>
+</head>
+<body>
+
+<!-- 导航 -->
+<nav class="nav">
+  <div class="nav-brand">2027 旅行年鉴</div>
+  <div class="nav-links">
+    <a href="#itinerary">行程总览</a>
+    <a href="#annual">年假规划</a>
+    <a href="#budget">预算明细</a>
+    <a href="#tips">实用贴士</a>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-eyebrow">SEVEN PROVINCES · ONE YEAR</div>
+  <h1 class="hero-title">七省大环线</h1>
+  <div class="hero-subtitle">2027 旅行年鉴</div>
+  <p class="hero-desc">
+    从北京出发，用全年节假日与五天年假，走遍黑龙江、吉林、西藏、青海、安徽、甘肃、宁夏七省。一省一次，不重复、不赶路，在对的季节去对的地方。
+  </p>
+  <div class="hero-stats">
+    <div class="stat-card"><div class="stat-num">7</div><div class="stat-label">覆盖省份</div></div>
+    <div class="stat-card"><div class="stat-num">33</div><div class="stat-label">旅行天数</div></div>
+    <div class="stat-card"><div class="stat-num">5</div><div class="stat-label">年假投入</div></div>
+    <div class="stat-card"><div class="stat-num">2.5万</div><div class="stat-label">人均预算</div></div>
+  </div>
+</section>
+
+<!-- 省份覆盖 -->
+<section class="section" id="provinces">
+  <div class="section-eyebrow">PROVINCES</div>
+  <h2 class="section-title">七省覆盖</h2>
+  <p class="section-sub">一省一次，按最佳季节匹配节假日</p>
+  <div class="province-bar">
+    <span class="province-tag hl">黑龙江 · 元旦</span>
+    <span class="province-tag">吉林 · 端午</span>
+    <span class="province-tag hl">西藏 · 国庆</span>
+    <span class="province-tag">青海 · 五一</span>
+    <span class="province-tag hl">安徽 · 清明</span>
+    <span class="province-tag">甘肃 · 五一</span>
+    <span class="province-tag hl">宁夏 · 中秋</span>
+  </div>
+</section>
+
+<!-- 行程总览 -->
+<section class="section" id="itinerary">
+  <div class="section-eyebrow">ITINERARY</div>
+  <h2 class="section-title">行程总览</h2>
+  <p class="section-sub">七段旅程，点击展开查看每日详情</p>
+
+  <button class="expand-all" onclick="toggleAll()">展开全部行程</button>
+
+  <div class="timeline">
+
+    <!-- D1 元旦 哈尔滨 -->
+    <div class="tl-item">
+      <div class="tl-axis-seg"></div>
+        <div class="tl-marker"></div>
+      <div class="tl-card">
+        <div class="tl-header" onclick="toggleItem(this)">
+          <div class="tl-header-left">
+            <div class="tl-day">D1</div>
+            <div class="tl-meta">
+              <div class="tl-date">1月1日 - 1月3日 · 元旦</div>
+              <div class="tl-title">黑龙江 · 哈尔滨冰雪三日</div>
+            </div>
+            <div class="tl-tags">
+              <span class="tl-tag accent">行程起点</span>
+              <span class="tl-tag">3天</span>
+            </div>
+          </div>
+          <div class="tl-header-right">
+            <div class="tl-budget">¥2500-4000/人</div>
+            <div class="tl-toggle">▾</div>
+          </div>
+        </div>
+        <div class="tl-extra">
+          <div class="tl-extra-inner">
+            <table class="day-table">
+              <colgroup><col style="width:18%"><col style="width:62%"><col style="width:20%"></colgroup>
+              <tr><th>日期</th><th>行程</th><th>住宿</th></tr>
+              <tr><td>1.1</td><td>北京飞哈尔滨 → 中央大街 → 圣索菲亚教堂 → 松花江冰面</td><td>哈尔滨</td></tr>
+              <tr><td>1.2</td><td>太阳岛雪博会 → 冰雪大世界（夜场）</td><td>哈尔滨</td></tr>
+              <tr><td>1.3</td><td>东北虎林园 → 老道外 → 返程</td><td>—</td></tr>
+            </table>
+            <div class="highlight-box">
+              <div class="label">亮点</div>
+              <p>冰雪大世界元旦刚开幕人少、-25℃极寒体验、俄式建筑夜景、松花江冰面娱乐</p>
+            </div>
+            <div class="tip-box">
+              <div class="label">贴士</div>
+              <p>冰雪大世界务必晚上去（灯光最美），暖宝宝贴满手机背面，长款羽绒服+雪地靴必备</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D2 春节 福州 -->
+    <div class="tl-item">
+      <div class="tl-axis-seg"></div>
+        <div class="tl-marker"></div>
+      <div class="tl-card">
+        <div class="tl-header" onclick="toggleItem(this)">
+          <div class="tl-header-left">
+            <div class="tl-day">D2</div>
+            <div class="tl-meta">
+              <div class="tl-date">2月6日 - 2月14日 · 春节</div>
+              <div class="tl-title">福州老家过年</div>
+            </div>
+            <div class="tl-tags">
+              <span class="tl-tag">回家</span>
+              <span class="tl-tag">9天</span>
+            </div>
+          </div>
+          <div class="tl-header-right">
+            <div class="tl-budget">¥1500-2500/人</div>
+            <div class="tl-toggle">▾</div>
+          </div>
+        </div>
+        <div class="tl-extra">
+          <div class="tl-extra-inner">
+            <table class="day-table">
+              <colgroup><col style="width:20%"><col style="width:80%"></colgroup>
+              <tr><th>日期</th><th>行程</th></tr>
+              <tr><td>2.6-2.14</td><td>回福州过年，陪家人，三坊七巷、鱼丸肉燕佛跳墙，不安排长途旅行</td></tr>
+            </table>
+            <div class="highlight-box">
+              <div class="label">说明</div>
+              <p>春节留足时间陪家人，福州美食与年味是最好的休整</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D3 清明 安徽 -->
+    <div class="tl-item">
+      <div class="tl-axis-seg"></div>
+        <div class="tl-marker"></div>
+      <div class="tl-card">
+        <div class="tl-header" onclick="toggleItem(this)">
+          <div class="tl-header-left">
+            <div class="tl-day">D3</div>
+            <div class="tl-meta">
+              <div class="tl-date">4月3日 - 4月7日 · 清明+2天年假</div>
+              <div class="tl-title">安徽 · 徽州深度五日</div>
+            </div>
+            <div class="tl-tags">
+              <span class="tl-tag accent">年假拼接</span>
+              <span class="tl-tag">5天</span>
+            </div>
+          </div>
+          <div class="tl-header-right">
+            <div class="tl-budget">¥2500-4000/人</div>
+            <div class="tl-toggle">▾</div>
+          </div>
+        </div>
+        <div class="tl-extra">
+          <div class="tl-extra-inner">
+            <table class="day-table">
+              <colgroup><col style="width:18%"><col style="width:62%"><col style="width:20%"></colgroup>
+              <tr><th>日期</th><th>行程</th><th>住宿</th></tr>
+              <tr><td>4.3</td><td>北京高铁→黄山（5h）→ 宏村 → 月沼夜景</td><td>宏村</td></tr>
+              <tr><td>4.4</td><td>塔川春色 → 卢村 → 木坑竹海</td><td>宏村</td></tr>
+              <tr><td>4.5</td><td>黄山一日游（云谷寺上→光明顶→玉屏下）</td><td>黄山脚下</td></tr>
+              <tr><td>4.6</td><td>西递 → 徽州古城 → 渔梁坝</td><td>歙县</td></tr>
+              <tr><td>4.7</td><td>棠樾牌坊群 → 返程</td><td>—</td></tr>
+            </table>
+            <div class="highlight-box">
+              <div class="label">亮点</div>
+              <p>徽州油菜花季、徽派古村落深度、黄山春色、棠樾牌坊群</p>
+            </div>
+            <div class="tip-box">
+              <div class="label">贴士</div>
+              <p>清明黄山多雨，带一次性雨衣；宏村住一晚看晨雾；高铁北京南→黄山北约5小时</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D4 五一 青甘 -->
+    <div class="tl-item">
+      <div class="tl-axis-seg"></div>
+        <div class="tl-marker"></div>
+      <div class="tl-card">
+        <div class="tl-header" onclick="toggleItem(this)">
+          <div class="tl-header-left">
+            <div class="tl-day">D4</div>
+            <div class="tl-meta">
+              <div class="tl-date">5月1日 - 5月5日 · 五一</div>
+              <div class="tl-title">青海+甘肃 · 青甘小环线五日</div>
+            </div>
+            <div class="tl-tags">
+              <span class="tl-tag accent">两省一次</span>
+              <span class="tl-tag">5天</span>
+            </div>
+          </div>
+          <div class="tl-header-right">
+            <div class="tl-budget">¥4000-6000/人</div>
+            <div class="tl-toggle">▾</div>
+          </div>
+        </div>
+        <div class="tl-extra">
+          <div class="tl-extra-inner">
+            <table class="day-table">
+              <colgroup><col style="width:15%"><col style="width:55%"><col style="width:15%"><col style="width:15%"></colgroup>
+              <tr><th>日期</th><th>行程</th><th>车程</th><th>住宿</th></tr>
+              <tr><td>5.1</td><td>西宁 → 青海湖（二郎剑）→ 茶卡盐湖（日落）</td><td>~300km</td><td>茶卡</td></tr>
+              <tr><td>5.2</td><td>茶卡日出 → 大柴旦翡翠湖</td><td>~400km</td><td>大柴旦</td></tr>
+              <tr><td>5.3</td><td>大柴旦 → 张掖七彩丹霞（日落）</td><td>~370km</td><td>张掖</td></tr>
+              <tr><td>5.4</td><td>张掖 → 嘉峪关 → 敦煌</td><td>~580km</td><td>敦煌</td></tr>
+              <tr><td>5.5</td><td>莫高窟 → 鸣沙山月牙泉 → 返程</td><td>—</td><td>—</td></tr>
+            </table>
+            <div class="highlight-box">
+              <div class="label">亮点</div>
+              <p>青海湖、茶卡天空之镜、翡翠湖、张掖七彩丹霞、莫高窟、鸣沙山月牙泉</p>
+            </div>
+            <div class="tip-box">
+              <div class="label">贴士</div>
+              <p>每天车程较长建议包车；莫高窟门票提前1个月官网预约；5月青海湖无油菜花但人少价低</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D5 端午 长白山 -->
+    <div class="tl-item">
+      <div class="tl-axis-seg"></div>
+        <div class="tl-marker"></div>
+      <div class="tl-card">
+        <div class="tl-header" onclick="toggleItem(this)">
+          <div class="tl-header-left">
+            <div class="tl-day">D5</div>
+            <div class="tl-meta">
+              <div class="tl-date">6月 · 端午</div>
+              <div class="tl-title">吉林 · 长白山三日</div>
+            </div>
+            <div class="tl-tags">
+              <span class="tl-tag">3天</span>
+            </div>
+          </div>
+          <div class="tl-header-right">
+            <div class="tl-budget">¥2000-3500/人</div>
+            <div class="tl-toggle">▾</div>
+          </div>
+        </div>
+        <div class="tl-extra">
+          <div class="tl-extra-inner">
+            <table class="day-table">
+              <colgroup><col style="width:18%"><col style="width:62%"><col style="width:20%"></colgroup>
+              <tr><th>日期</th><th>行程</th><th>住宿</th></tr>
+              <tr><td>D1</td><td>北京飞长白山 → 西坡（爬1442级台阶看天池）</td><td>松江河</td></tr>
+              <tr><td>D2</td><td>北坡（长白瀑布→聚龙温泉→地下森林）</td><td>二道白河</td></tr>
+              <tr><td>D3</td><td>魔界风景区 → 返程</td><td>—</td></tr>
+            </table>
+            <div class="highlight-box">
+              <div class="label">亮点</div>
+              <p>6月天池冰雪初融、高山野花、温泉煮蛋、魔界雾凇</p>
+            </div>
+            <div class="tip-box">
+              <div class="label">贴士</div>
+              <p>天池看缘分，西坡视野好但需爬坡，北坡景点多；带外套（山上10℃左右）</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D6 中秋 宁夏 -->
+    <div class="tl-item">
+      <div class="tl-axis-seg"></div>
+        <div class="tl-marker"></div>
+      <div class="tl-card">
+        <div class="tl-header" onclick="toggleItem(this)">
+          <div class="tl-header-left">
+            <div class="tl-day">D6</div>
+            <div class="tl-meta">
+              <div class="tl-date">9月 · 中秋</div>
+              <div class="tl-title">宁夏 · 银川中卫三日</div>
+            </div>
+            <div class="tl-tags">
+              <span class="tl-tag">3天</span>
+            </div>
+          </div>
+          <div class="tl-header-right">
+            <div class="tl-budget">¥2000-3500/人</div>
+            <div class="tl-toggle">▾</div>
+          </div>
+        </div>
+        <div class="tl-extra">
+          <div class="tl-extra-inner">
+            <table class="day-table">
+              <colgroup><col style="width:18%"><col style="width:62%"><col style="width:20%"></colgroup>
+              <tr><th>日期</th><th>行程</th><th>住宿</th></tr>
+              <tr><td>D1</td><td>北京飞银川 → 西夏王陵 → 镇北堡西部影城</td><td>银川</td></tr>
+              <tr><td>D2</td><td>中卫沙坡头（黄河飞索→沙漠冲浪→骑骆驼）</td><td>中卫</td></tr>
+              <tr><td>D3</td><td>贺兰山岩画 → 返程</td><td>—</td></tr>
+            </table>
+            <div class="highlight-box">
+              <div class="label">亮点</div>
+              <p>沙坡头黄河+沙漠双体验、《大话西游》取景地、西夏文化、贺兰山岩画</p>
+            </div>
+            <div class="tip-box">
+              <div class="label">贴士</div>
+              <p>9月沙漠早晚凉带外套；沙坡头套票更划算；银川手抓羊肉必吃</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- D7 国庆 西藏 -->
+    <div class="tl-item">
+      <div class="tl-axis-seg"></div>
+        <div class="tl-marker"></div>
+      <div class="tl-card">
+        <div class="tl-header" onclick="toggleItem(this)">
+          <div class="tl-header-left">
+            <div class="tl-day">D7</div>
+            <div class="tl-meta">
+              <div class="tl-date">10月1日 - 10月10日 · 国庆+3天年假</div>
+              <div class="tl-title">西藏 · 金秋大环线十日</div>
+            </div>
+            <div class="tl-tags">
+              <span class="tl-tag accent">年假拼接</span>
+              <span class="tl-tag accent">重头戏</span>
+              <span class="tl-tag">10天</span>
+            </div>
+          </div>
+          <div class="tl-header-right">
+            <div class="tl-budget">¥8000-13000/人</div>
+            <div class="tl-toggle">▾</div>
+          </div>
+        </div>
+        <div class="tl-extra">
+          <div class="tl-extra-inner">
+            <table class="day-table">
+              <colgroup><col style="width:18%"><col style="width:62%"><col style="width:20%"></colgroup>
+              <tr><th>日期</th><th>行程</th><th>住宿</th></tr>
+              <tr><td>10.1</td><td>北京飞拉萨 → 休息适应（别洗澡）</td><td>拉萨</td></tr>
+              <tr><td>10.2</td><td>布达拉宫 → 大昭寺 → 八廓街</td><td>拉萨</td></tr>
+              <tr><td>10.3</td><td>羊卓雍错 → 卡若拉冰川 → 日喀则</td><td>日喀则</td></tr>
+              <tr><td>10.4</td><td>扎什伦布寺 → 定日</td><td>定日</td></tr>
+              <tr><td>10.5</td><td>珠峰大本营（绒布寺）→ 日喀则</td><td>日喀则</td></tr>
+              <tr><td>10.6</td><td>日喀则 → 纳木错（日落星空）</td><td>当雄</td></tr>
+              <tr><td>10.7</td><td>纳木错日出 → 拉萨</td><td>拉萨</td></tr>
+              <tr><td>10.8</td><td>拉萨 → 林芝（巴松措）</td><td>林芝</td></tr>
+              <tr><td>10.9</td><td>鲁朗林海 → 雅鲁藏布大峡谷 → 南迦巴瓦峰</td><td>林芝</td></tr>
+              <tr><td>10.10</td><td>林芝飞北京（或拉萨返程）</td><td>—</td></tr>
+            </table>
+            <div class="highlight-box">
+              <div class="label">亮点</div>
+              <p>10月西藏全年最佳季节、珠峰大本营、纳木错星空、南迦巴瓦峰、金秋层林尽染</p>
+            </div>
+            <div class="tip-box">
+              <div class="label">贴士</div>
+              <p>国庆西藏旺季，机票住宿提前2个月订；珠峰大本营海拔5200m，带够厚衣服和氧气瓶；前3天别洗澡防高反</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- 年假规划 -->
+<section class="section" id="annual">
+  <div class="section-eyebrow">ANNUAL LEAVE</div>
+  <h2 class="section-title">年假规划</h2>
+  <p class="section-sub">5天年假全用在刀刃上</p>
+
+  <div class="annual-leave">
+    <div class="al-grid">
+      <div class="al-card">
+        <h4>清明 + 2天年假</h4>
+        <p>4月3日-5日（法定3天）+ 4月6日-7日（年假2天）= 5天<br>用于安徽徽州深度游，比3天多玩西递、徽州古城、棠樾牌坊</p>
+      </div>
+      <div class="al-card">
+        <h4>国庆 + 3天年假</h4>
+        <p>10月1日-7日（法定7天）+ 10月8日-10日（年假3天）= 10天<br>用于西藏大环线，多出的3天走林芝+雅鲁藏布大峡谷+南迦巴瓦</p>
+      </div>
+    </div>
+    <div class="al-total">
+      <div class="num">5天</div>
+      <div class="lbl">年假全部用完 · 无浪费</div>
+    </div>
+  </div>
+</section>
+
+<!-- 预算明细 -->
+<section class="section" id="budget">
+  <div class="section-eyebrow">BUDGET</div>
+  <h2 class="section-title">预算明细</h2>
+  <p class="section-sub">人均预算估算，含交通住宿门票餐饮</p>
+
+  <div class="budget-wrap">
+    <table class="budget-table">
+      <colgroup>
+        <col style="width:32%">
+        <col style="width:14%">
+        <col style="width:27%">
+        <col style="width:27%">
+      </colgroup>
+      <tr>
+        <th>行程</th>
+        <th>天数</th>
+        <th class="num">人均预算</th>
+        <th class="num">两人合计</th>
+      </tr>
+      <tr><td>元旦 · 哈尔滨</td><td>3天</td><td class="num">¥2,500 - 4,000</td><td class="num">¥5,000 - 8,000</td></tr>
+      <tr><td>春节 · 福州</td><td>9天</td><td class="num">¥1,500 - 2,500</td><td class="num">¥3,000 - 5,000</td></tr>
+      <tr><td>清明 · 安徽</td><td>5天</td><td class="num">¥2,500 - 4,000</td><td class="num">¥5,000 - 8,000</td></tr>
+      <tr><td>五一 · 青甘</td><td>5天</td><td class="num">¥4,000 - 6,000</td><td class="num">¥8,000 - 12,000</td></tr>
+      <tr><td>端午 · 长白山</td><td>3天</td><td class="num">¥2,000 - 3,500</td><td class="num">¥4,000 - 7,000</td></tr>
+      <tr><td>中秋 · 宁夏</td><td>3天</td><td class="num">¥2,000 - 3,500</td><td class="num">¥4,000 - 7,000</td></tr>
+      <tr><td>国庆 · 西藏</td><td>10天</td><td class="num">¥8,000 - 13,000</td><td class="num">¥16,000 - 26,000</td></tr>
+      <tr class="total"><td>全年合计</td><td>38天</td><td class="num">¥22,500 - 36,500</td><td class="num">¥45,000 - 73,000</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- 实用贴士 -->
+<section class="section" id="tips">
+  <div class="section-eyebrow">TIPS</div>
+  <h2 class="section-title">实用贴士</h2>
+  <p class="section-sub">订票时间线、高反预防、防寒装备</p>
+
+  <div class="tips-grid">
+    <div class="tip-card">
+      <h4>订票时间线</h4>
+      <div class="booking-timeline">
+        <div class="bt-item priority"><div class="bt-dot"></div><div class="bt-time">2026年12月</div><div class="bt-text">订元旦哈尔滨住宿（冰雪季涨价快）</div></div>
+        <div class="bt-item"><div class="bt-dot"></div><div class="bt-time">2027年2月</div><div class="bt-text">订清明安徽高铁+住宿</div></div>
+        <div class="bt-item priority"><div class="bt-dot"></div><div class="bt-time">2027年3月</div><div class="bt-text">预约五一莫高窟门票（提前1个月）</div></div>
+        <div class="bt-item priority"><div class="bt-dot"></div><div class="bt-time">2027年7月</div><div class="bt-text">订国庆西藏机票+住宿（提前2个月）</div></div>
+        <div class="bt-item"><div class="bt-dot"></div><div class="bt-time">2027年8月</div><div class="bt-text">订国庆西藏包车/拼团</div></div>
+      </div>
+    </div>
+
+    <div class="tip-card">
+      <h4>高反预防（西藏）</h4>
+      <ul>
+        <li>出发前1周开始吃红景天</li>
+        <li>到拉萨前3天别洗澡、别剧烈运动</li>
+        <li>备氧气瓶（拉萨药店约20元/瓶）</li>
+        <li>珠峰大本营当晚最难受，可选择住定日</li>
+        <li>多喝温水，少喝酒，保证睡眠</li>
+        <li>出现严重头痛呕吐立即下撤就医</li>
+      </ul>
+    </div>
+
+    <div class="tip-card">
+      <h4>防寒装备清单</h4>
+      <ul>
+        <li>哈尔滨/西藏：长款羽绒服+保暖内衣+雪地靴+暖宝宝</li>
+        <li>青海湖/纳木错：即使夏天夜间也可能0℃，带冲锋衣</li>
+        <li>长白山：山上风大，防风外套+帽子手套</li>
+        <li>宁夏沙漠：早晚温差大，薄羽绒+防晒</li>
+        <li>手机暖宝宝（极寒环境掉电极快）</li>
+        <li>保温杯（随时喝热水防高反+防寒）</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 页脚 -->
+<footer class="footer">
+  <div class="quote">"要么旅行，要么读书，身体和灵魂必须有一个在路上。"</div>
+  <div>2027 旅行年鉴 · 七省大环线 · 从北京出发</div>
+</footer>
+
+<script>
+function toggleItem(header){
+  const item = header.closest('.tl-item');
+  item.classList.toggle('open');
+}
+let allOpen = false;
+function toggleAll(){
+  const items = document.querySelectorAll('.tl-item');
+  allOpen = !allOpen;
+  items.forEach(it => it.classList.toggle('open', allOpen));
+  document.querySelector('.expand-all').textContent = allOpen ? '收起全部行程' : '展开全部行程';
+}
+// 默认展开第一个
+document.querySelector('.tl-item').classList.add('open');
+</script>
+
+</body>
+</html>
+<!-- （注：内容由AI生成） -->
